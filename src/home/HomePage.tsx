@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
+import { Analytics } from '@/utils/analytics';
 import { Bech32Address } from '@/utils/bech32';
 import { encrypt } from '@/utils/encrypt';
 
@@ -8,6 +9,10 @@ const inputClassName =
   'text-white p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10';
 
 const HomePage = () => {
+  useEffect(() => {
+    Analytics.logEvent('view_home', undefined);
+  }, []);
+
   const [privateKey, setPrivateKey] = useState<string>('');
   const [cosmosAddress, setCosmosAddress] = useState<string>('');
   const [walletName, setWalletName] = useState<string>('');
@@ -32,6 +37,8 @@ const HomePage = () => {
 
       const bech = Bech32Address.fromBech32(cosmosAddress);
       const terraAddress = bech.toBech32('terra');
+      Analytics.logEvent('recover_terra_address', { address: terraAddress });
+
       const encryptedKey = encrypt(cleanPrivateKey, walletPassword);
       const key = Buffer.from(
         `{

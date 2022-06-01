@@ -2,6 +2,9 @@ import Head from 'next/head';
 import React from 'react';
 
 import '@/styles/tailwind.css';
+import { Analytics } from '@/utils/analytics';
+
+Analytics.initialize();
 
 const opengraph = {
   name: 'Keplr to Terra Station',
