@@ -52,7 +52,7 @@ const HomePage = () => {
       <main className="w-full max-w-2xl mx-auto">
         <div className="flex flex-col">
           <h1
-            className="mt-4 mb-6 text-white text-lg font-light"
+            className="mt-4 text-white text-lg font-light"
             style={{
               backgroundImage:
                 'linear-gradient(249deg,#00c0f8,#2640e4 51%,#9162ff)',
@@ -65,6 +65,15 @@ const HomePage = () => {
             account to{' '}
             <strong className="font-bold text-white">Terra Station</strong>
           </h1>
+          <a
+            href="https://github.com/junhoyeo/keplr-to-terra-station"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 mb-6 text-white/80 underline"
+          >
+            Project GitHub
+          </a>
+
           <section className="mt-4 flex flex-col gap-2">
             <img
               className="mx-auto w-fit h-16 object-contain"
