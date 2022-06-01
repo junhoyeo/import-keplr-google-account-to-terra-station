@@ -4,15 +4,28 @@ import React, { useCallback, useState } from 'react';
 import { Bech32Address } from '@/utils/bech32';
 import { encrypt } from '@/utils/encrypt';
 
+const inputClassName =
+  'text-white p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10';
+
 const HomePage = () => {
   const [privateKey, setPrivateKey] = useState<string>('');
   const [cosmosAddress, setCosmosAddress] = useState<string>('');
   const [walletName, setWalletName] = useState<string>('');
   const [walletPassword, setWalletPassword] = useState<string>('');
 
-  const [terraStationKey, setTerraStationKey] = useState<string>('');
+  const [keplrHelpShown, setKeplrHelpShown] = useState<boolean>(false);
+  const [terraStationHelpShown, setTerraStationHelpShown] =
+    useState<boolean>(false);
+
+  const [terraStationKey, setTerraStationKey] = useState<string>(
+    '(result show up here)',
+  );
   const onClickGenerateKey = useCallback(() => {
     try {
+      if (!walletName || !walletPassword) {
+        throw new Error('Wallet name and password are required');
+      }
+
       const cleanPrivateKey = privateKey.startsWith('0x')
         ? privateKey.slice(2)
         : privateKey;
@@ -54,21 +67,33 @@ const HomePage = () => {
           </h1>
           <section className="mt-4 flex flex-col gap-2">
             <img
-              className="h-16 object-contain"
+              className="mx-auto w-fit h-16 object-contain"
               alt="Keplr"
               src="/assets/keplr.png"
             />
-            <span className="mb-2 mx-auto font-bold leading-tight text-center text-white/80">
-              Credentials in Keplr
+            <span
+              className="mb-1 mx-auto font-bold leading-tight text-center text-white/80 cursor-pointer select-none"
+              onClick={() => setKeplrHelpShown((prev) => !prev)}
+            >
+              Credentials in Keplr{' '}
+              <span className="text-[#04bbf6]">[Help]</span>
             </span>
+            {keplrHelpShown && (
+              <img
+                className="mb-2 mx-auto rounded-md w-fit h-80 object-contain cursor-pointer select-none"
+                alt="Press 'View private key' of selected wallet in Keplr Extension"
+                src="/assets/keplr-select-account.png"
+                onClick={() => setKeplrHelpShown((prev) => !prev)}
+              />
+            )}
             <input
-              className="p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10"
+              className={inputClassName}
               value={privateKey}
               onChange={(e) => setPrivateKey(e.target.value)}
               placeholder="Keplr private key"
             />
             <input
-              className="p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10"
+              className={inputClassName}
               value={cosmosAddress}
               onChange={(e) => setCosmosAddress(e.target.value)}
               placeholder="Cosmos/Osmosis Address"
@@ -77,7 +102,7 @@ const HomePage = () => {
 
           <section className="mt-12 flex flex-col gap-2">
             <img
-              className="h-16 object-contain"
+              className="mx-auto w-fit h-16 object-contain"
               alt="Keplr"
               src="/assets/terra-station.png"
             />
@@ -86,13 +111,13 @@ const HomePage = () => {
               <span className="inline-block">to use in Terra Station</span>
             </span>
             <input
-              className="p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10"
+              className={inputClassName}
               value={walletName}
               onChange={(e) => setWalletName(e.target.value)}
               placeholder="Wallet Name"
             />
             <input
-              className="p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10"
+              className={inputClassName}
               value={walletPassword}
               onChange={(e) => setWalletPassword(e.target.value)}
               placeholder="Wallet Password"
@@ -113,11 +138,29 @@ const HomePage = () => {
           </div>
 
           {!!terraStationKey && (
-            <input
-              className="p-3 px-4 rounded-md bg-indigo-400/10 font-medium outline-none focus:bg-indigo-600/10"
-              value={terraStationKey}
-              disabled
-            />
+            <section className="mt-12 flex flex-col gap-2">
+              <span
+                className="mb-1 mx-auto font-bold leading-tight text-center text-white/80 cursor-pointer select-none"
+                onClick={() => setTerraStationHelpShown((prev) => !prev)}
+              >
+                🎉 Import this key to Terra Station!{' '}
+                <span className="text-[#04bbf6]">[Help]</span>
+              </span>
+              {terraStationHelpShown && (
+                <img
+                  className="mb-2 mx-auto rounded-md w-fit h-80 object-contain cursor-pointer select-none"
+                  alt="Import wallet in Terra Station"
+                  src="/assets/terra-station-import-wallet.png"
+                  onClick={() => setTerraStationHelpShown((prev) => !prev)}
+                />
+              )}
+              <textarea
+                rows={7}
+                className={inputClassName}
+                value={terraStationKey}
+                disabled
+              />
+            </section>
           )}
         </div>
       </main>
